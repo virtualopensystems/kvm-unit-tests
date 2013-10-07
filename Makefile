@@ -12,7 +12,6 @@ libgcc := $(shell $(CC) --print-libgcc-file-name)
 
 libcflat := lib/libcflat.a
 cflatobjs := \
-	lib/panic.o \
 	lib/printf.o \
 	lib/string.o
 cflatobjs += lib/argv.o
@@ -39,11 +38,6 @@ autodepend-flags = -MMD -MF $(dir $*).$(notdir $*).d
 LDFLAGS += $(CFLAGS)
 LDFLAGS += -pthread -lrt
 
-kvmtrace_objs= kvmtrace.o
-
-kvmtrace: $(kvmtrace_objs)
-	$(CC) $(LDFLAGS) $^ -o $@
-
 $(libcflat): $(cflatobjs)
 	$(AR) rcs $@ $^
 
@@ -57,4 +51,4 @@ install:
 	install $(tests_and_config) $(DESTDIR)
 
 clean: arch_clean
-	$(RM) kvmtrace *.o *.a .*.d $(libcflat) $(cflatobjs)
+	$(RM) *.o *.a .*.d $(libcflat) $(cflatobjs)
