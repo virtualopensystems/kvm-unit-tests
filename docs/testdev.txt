@@ -9,6 +9,3 @@ irq line setting: write only, on io ports 0x2000 - 0x2018, value to set/clear
 simple io: read/write, on io port 0xe0, 1/2/4 bytes
 
 Test device used a char device for actual output
-
-
-
