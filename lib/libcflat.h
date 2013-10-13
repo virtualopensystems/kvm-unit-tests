@@ -37,6 +37,7 @@ typedef _Bool bool;
 #define true 1
 #define false 0
 
+extern void halt(int code);
 extern void exit(int code);
 
 extern unsigned long strlen(const char *buf);
@@ -57,4 +58,5 @@ extern long atol(const char *ptr);
 #define offsetof(TYPE, MEMBER) __builtin_offsetof (TYPE, MEMBER)
 
 #define NULL ((void *)0UL)
+#include "errno.h"
 #endif
