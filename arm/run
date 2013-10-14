@@ -1,0 +1,19 @@
+#!/bin/bash
+
+qemu="${QEMU:-qemu-system-arm}"
+testdev='virtio-testdev'
+
+if ! $qemu -device '?' 2>&1 | grep $testdev > /dev/null; then
+    echo \"$qemu\" has no support for the virtio test device. Exiting.
+    exit 2
+fi
+
+command="$qemu -device $testdev -display none -serial stdio "
+command+="-M virt -cpu cortex-a15 "
+#command+="-enable-kvm "
+command+="-kernel"
+echo $command "$@"
+$command "$@"
+ret=$?
+echo Return value from qemu: $ret
+exit $ret

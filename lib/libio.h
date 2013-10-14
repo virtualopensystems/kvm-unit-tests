@@ -14,6 +14,10 @@
 #define LIBIO_ASSERT(expr) do { } while (0)
 #endif
 
+#ifdef __arm__
+#include "arm/io.h"
+#endif
+
 typedef u32 compat_ptr_t;
 
 /*
