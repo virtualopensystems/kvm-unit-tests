@@ -1,6 +1,7 @@
 #include "fwcfg.h"
 #include "vm.h"
 #include "libcflat.h"
+#include "heap.h"
 
 #define PAGE_SIZE 4096ul
 #ifdef __x86_64__
@@ -9,37 +10,7 @@
 #define LARGE_PAGE_SIZE (1024 * PAGE_SIZE)
 #endif
 
-static void *free = 0;
 static void *vfree_top = 0;
-
-static void free_memory(void *mem, unsigned long size)
-{
-    while (size >= PAGE_SIZE) {
-	*(void **)mem = free;
-	free = mem;
-	mem += PAGE_SIZE;
-	size -= PAGE_SIZE;
-    }
-}
-
-void *alloc_page()
-{
-    void *p;
-
-    if (!free)
-	return 0;
-
-    p = free;
-    free = *(void **)free;
-
-    return p;
-}
-
-void free_page(void *page)
-{
-    *(void **)page = free;
-    free = page;
-}
 
 extern char edata;
 static unsigned long end_of_memory;
@@ -185,7 +156,7 @@ static void setup_mmu(unsigned long len)
 void setup_vm()
 {
     end_of_memory = fwcfg_get_u64(FW_CFG_RAM_SIZE);
-    free_memory(&edata, end_of_memory - (unsigned long)&edata);
+    heap_init(&edata, end_of_memory - (unsigned long)&edata, PAGE_SIZE);
     setup_mmu(end_of_memory);
 }
 

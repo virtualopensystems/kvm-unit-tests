@@ -2,6 +2,7 @@
 
 all: test_cases
 
+cflatobjs += lib/heap.o
 cflatobjs += lib/x86/io.o
 cflatobjs += lib/x86/smp.o
 cflatobjs += lib/x86/vm.o
