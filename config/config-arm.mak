@@ -32,10 +32,9 @@ CFLAGS += -marm
 CFLAGS += -O2
 ifeq ($(PROCESSOR), $(ARCH))
 	# PROCESSOR=ARCH is the default, but there is no 'arm' cpu
-	CFLAGS += -mcpu=cortex-a15
-else
-	CFLAGS += -mcpu=$(PROCESSOR)
+	PROCESSOR = cortex-a15
 endif
+CFLAGS += -mcpu=$(PROCESSOR)
 
 libgcc := $(shell $(CC) -m$(ARCH) --print-libgcc-file-name)
 start_addr := $(shell printf "%x\n" $$(( $(phys_base) + $(kernel_offset) )))
@@ -62,6 +61,19 @@ $(TEST_DIR)/%.o: CFLAGS += -std=gnu99 -ffreestanding $(includedirs)
 
 $(TEST_DIR)/selftest.elf: $(cstart.o) $(TEST_DIR)/selftest.o
 
-arch_clean: libfdt_clean
+arch_clean: libfdt_clean scripts_clean
 	$(RM) $(TEST_DIR)/*.o $(TEST_DIR)/*.flat $(TEST_DIR)/*.elf \
 	$(libeabi) $(eabiobjs) $(TEST_DIR)/.*.d lib/arm/.*.d
+
+.PHONY: scripts_clean asm-offsets
+
+scripts_clean:
+	$(RM) scripts/arm/.*.d scripts/arm/*.o \
+	scripts/arm/*.flat scripts/arm/*.elf
+
+asm-offsets: scripts/arm/asm-offsets.flat
+	$(QEMU) -device virtio-testdev -display none -serial stdio \
+		-M virt -cpu $(PROCESSOR) \
+		-kernel $^ > lib/arm/asm-offsets.h || true
+scripts/arm/asm-offsets.elf: $(cstart.o) scripts/arm/asm-offsets.o
+scripts/arm/%.o: CFLAGS += -std=gnu99 -ffreestanding $(includedirs)
