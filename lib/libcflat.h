@@ -65,6 +65,8 @@ extern long atol(const char *ptr);
 		(type *)( (char *)__mptr - offsetof(type,member) );})
 
 #define __unused __attribute__((__unused__))
+#define __stringify_1(x...)	#x
+#define __stringify(x...)	__stringify_1(x)
 #define NULL ((void *)0UL)
 #include "errno.h"
 #endif
