@@ -61,6 +61,7 @@ extern long atol(const char *ptr);
 
 #define offsetof(TYPE, MEMBER) __builtin_offsetof (TYPE, MEMBER)
 
+#define __unused __attribute__((__unused__))
 #define NULL ((void *)0UL)
 #include "errno.h"
 #endif
