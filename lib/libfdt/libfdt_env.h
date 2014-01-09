@@ -52,9 +52,16 @@
  *     EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 
-#include <stddef.h>
-#include <stdint.h>
-#include <string.h>
+#include "libcflat.h"
+#include "libio.h"
+
+#ifndef HAVE_UINTS
+typedef u8 uint8_t;
+typedef u16 uint16_t;
+typedef u32 uint32_t;
+typedef u64 uint64_t;
+typedef unsigned long uintptr_t;
+#endif
 
 #ifdef __CHECKER__
 #define __force __attribute__((force))
@@ -68,14 +75,9 @@ typedef uint16_t __bitwise fdt16_t;
 typedef uint32_t __bitwise fdt32_t;
 typedef uint64_t __bitwise fdt64_t;
 
-#define EXTRACT_BYTE(x, n)	((unsigned long long)((uint8_t *)&x)[n])
-#define CPU_TO_FDT16(x) ((EXTRACT_BYTE(x, 0) << 8) | EXTRACT_BYTE(x, 1))
-#define CPU_TO_FDT32(x) ((EXTRACT_BYTE(x, 0) << 24) | (EXTRACT_BYTE(x, 1) << 16) | \
-			 (EXTRACT_BYTE(x, 2) << 8) | EXTRACT_BYTE(x, 3))
-#define CPU_TO_FDT64(x) ((EXTRACT_BYTE(x, 0) << 56) | (EXTRACT_BYTE(x, 1) << 48) | \
-			 (EXTRACT_BYTE(x, 2) << 40) | (EXTRACT_BYTE(x, 3) << 32) | \
-			 (EXTRACT_BYTE(x, 4) << 24) | (EXTRACT_BYTE(x, 5) << 16) | \
-			 (EXTRACT_BYTE(x, 6) << 8) | EXTRACT_BYTE(x, 7))
+#define CPU_TO_FDT16 cpu_to_be16
+#define CPU_TO_FDT32 cpu_to_be32
+#define CPU_TO_FDT64 cpu_to_be64
 
 static inline uint16_t fdt16_to_cpu(fdt16_t x)
 {
@@ -106,6 +108,5 @@ static inline fdt64_t cpu_to_fdt64(uint64_t x)
 #undef CPU_TO_FDT64
 #undef CPU_TO_FDT32
 #undef CPU_TO_FDT16
-#undef EXTRACT_BYTE
 
 #endif /* _LIBFDT_ENV_H */
