@@ -2,8 +2,14 @@
 *.a
 *.d
 *.o
+*.elf
 *.flat
 .pc
 patches
 .stgit-*
 cscope.*
+*.swp
+/config.mak
+/*-run
+/test.log
+/msr.out
