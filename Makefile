@@ -3,7 +3,7 @@ include config.mak
 
 DESTDIR := $(PREFIX)/share/qemu/tests
 
-.PHONY: arch_clean clean
+.PHONY: arch_clean clean cscope
 
 #make sure env CFLAGS variable is not used
 CFLAGS =
@@ -52,3 +52,10 @@ install:
 
 clean: arch_clean
 	$(RM) lib/.*.d $(libcflat) $(cflatobjs)
+
+cscope: common_dirs = lib
+cscope:
+	rm -f ./cscope.*
+	find $(TEST_DIR) lib/$(TEST_DIR) $(common_dirs) -maxdepth 1 \
+		-name "*.[chsS]" -print | sed 's,^\./,,' > ./cscope.files
+	cscope -bk
