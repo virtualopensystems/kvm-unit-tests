@@ -8,7 +8,9 @@
 
 #ifndef NDEBUG
 #define LIBIO_ASSERT(expr) do { \
-	if (!(expr)) printf("%s:%d: assert failed!\n", __FILE__, __LINE__);\
+	if (!(expr)) \
+		printf("%s:%d: assert failed!\n", __FILE__, __LINE__), \
+		exit(EINVAL); \
 } while (0)
 #else
 #define LIBIO_ASSERT(expr) do { } while (0)
